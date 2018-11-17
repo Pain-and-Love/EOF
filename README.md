@@ -1,2 +1,2 @@
 # EOF
-eof学习
+## es6/src/demo 文件夹为总结训练
