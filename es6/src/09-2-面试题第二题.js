@@ -27,6 +27,7 @@ class Screen {
 class Park {
     constructor(floors) {
         this.floors = floors || []
+        // 这里引入camera和screen也是需要"借用"它们的方法
         this.camera = new Camera()
         this.screen = new Screen()
         this.carList = {}
@@ -34,10 +35,13 @@ class Park {
     in(car) {
         // 获取摄像头的信息：号码 时间
         const info = this.camera.shot(car)
-        // 停到某个车位
+        // 停到某个车位,随机模拟
         const i = parseInt(Math.random() * 100 % 100)
         const place = this.floors[0].places[i]
         place.in()
+        // 这里没有将info挂在car实例上，因为这个info属性在这个场景中并不是car一开始就需要的，因为car初始化的时候并没有进入Park,它可能永远都不会进入，所以没必要一开始就上一个info
+        // 而是等Park实例的in方法执行时，再给carList(其实是map)挂一个与car.id对应的info值。
+        // 这样做并没有改变car实例的属性，同时成功地将car和info对应上了。(借助于{}的映射关系)
         info.place = place
         // 记录信息
         this.carList[car.num] = info
