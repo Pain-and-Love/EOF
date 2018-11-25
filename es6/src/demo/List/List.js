@@ -4,7 +4,9 @@ import { GET_LIST } from '../config/config.js'
 
 export default class List {
     constructor(app) {
+        // 引入app的目的也是需要确定这个list的挂载点
         this.app = app
+        // 自己的挂载点
         this.$el = $('<div>')
     }
 
@@ -20,7 +22,9 @@ export default class List {
     // 生成列表
     initItemList(data) {
         data.map(itemData => {
+            // 这里的item也有可能是Proxy实例
             let item = createItem(this, itemData)
+            // item自身的渲染方法，此时已经渲染再list节点上了
             item.init()
             return item
         })

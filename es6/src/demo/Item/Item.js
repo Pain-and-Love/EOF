@@ -5,19 +5,22 @@ import getCart from '../ShoppingCart/GetCart.js'
 
 export default class Item {
     constructor(list, data) {
+        // 这里的list其实就是一个dom实例，用来确定"对应的"item实例的插入点
         this.list = list
         this.data = data
         this.$el = $('<div>')
+        // 每个item实例都需要"同样的"cart单例
         this.cart = getCart()
     }
 
+    // dom渲染
     initContent() {
         let $el = this.$el
         let data = this.data
         $el.append($(`<p>名称：${data.name}</p>`))
         $el.append($(`<p>价格：${data.price}</p>`))
     }
-
+    // dom渲染 + 事件绑定(结合状态模式)
     initBtn() {
         let $el = this.$el
         let $btn = $('<button>')
@@ -51,10 +54,11 @@ export default class Item {
                 }
             }
         })
+        // 更新html文案
         function updateText() {
             $btn.text(fsm.state)
         }
-
+        // 事件绑定
         $btn.click(() => {
             if (fsm.is('加入购物车')) {
                 fsm.addToCart()
@@ -63,11 +67,11 @@ export default class Item {
             }
         })
         updateText()
-
         $el.append($btn)
     }
 
     // 加入购物车
+    // 结合装饰器模式，将add事件设置一个logger
     @log('add')
     addToCartHandle() {
         this.cart.add(this.data)
@@ -78,7 +82,7 @@ export default class Item {
     deleteFromCartHandle() {
         this.cart.del(this.data.id)
     }
-
+    // 将item渲染到对应的list节点上
     render() {
         this.list.$el.append(this.$el)
     }
